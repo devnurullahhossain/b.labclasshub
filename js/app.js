@@ -5,6 +5,18 @@
   var root = document.documentElement;
   root.classList.add('js');
 
+  /* If js/data.js is broken or a list is missing, say so on the page instead of showing an empty site. */
+  var NEED = ['SITE', 'NEXT_CLASS', 'TRACKS', 'STATUS', 'PEOPLE', 'NOTICES', 'RESOURCES', 'HIRE', 'FAQ', 'TRACKER', 'STORIES'], missing = [];
+  NEED.forEach(function(n){ if (typeof window[n] === 'undefined') missing.push(n); });
+  if (missing.length) {
+    var box = document.createElement('div');
+    box.setAttribute('role', 'alert');
+    box.style.cssText = 'position:fixed;left:16px;right:16px;bottom:16px;z-index:9999;max-width:640px;margin:auto;padding:16px 20px;border-radius:14px;background:#7A1F17;color:#fff;font:500 15px/1.5 system-ui,sans-serif;box-shadow:0 12px 40px rgba(0,0,0,.4)';
+    box.textContent = 'js/data.js has a mistake. Missing: ' + missing.join(', ') + '. Press F12 and open Console to see the line, or put back the last working data.js.';
+    document.body.appendChild(box);
+    return;
+  }
+
   var $ = function(id){ return document.getElementById(id); };
   var reduce = false;   /* animations are always on, even when the phone or PC has reduce motion switched on */
   var finePointer = window.matchMedia && matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -213,12 +225,58 @@
     }).join('');
   }
 
+  var libKind = 'All';
   function renderResources(){
+    var kinds = ['All'];
+    RESOURCES.forEach(function(r){ if (kinds.indexOf(r.kind) < 0) kinds.push(r.kind); });
+    $('libTabs').innerHTML = kinds.map(function(k){
+      var n = k === 'All' ? RESOURCES.length : RESOURCES.filter(function(r){ return r.kind === k; }).length;
+      return '<button class="chip" type="button" data-kind="' + esc(k) + '" aria-pressed="' + (libKind === k) + '">' + esc(k) + '<small>' + n + '</small></button>';
+    }).join('');
     $('res').innerHTML = RESOURCES.map(function(r){
       var inner = '<span class="ri" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + (ICONS[r.icon] || ICONS.file) + '</svg></span>' +
         '<div><span class="rk">' + esc(r.kind) + (r.href ? ' · opens in a new tab' : '') + '</span><h3>' + esc(r.title) + '</h3><p>' + esc(r.text) + '</p></div>';
-      return '<li>' + (r.href ? '<a class="rcard" href="' + esc(r.href) + '" target="_blank" rel="noopener">' + inner + '</a>' : '<div class="rcard">' + inner + '</div>') + '</li>';
+      return '<li data-kind="' + esc(r.kind) + '"' + (libKind !== 'All' && libKind !== r.kind ? ' hidden' : '') + '>' + (r.href ? '<a class="rcard" href="' + esc(r.href) + '" target="_blank" rel="noopener">' + inner + '</a>' : '<div class="rcard">' + inner + '</div>') + '</li>';
     }).join('');
+  }
+
+  /* learning path: ticks are saved in this browser only */
+  var roadTrack = Object.keys(TRACKS)[0], roadDone = {};
+  try { roadDone = JSON.parse(localStorage.getItem('blab-road') || '{}') || {}; } catch (e) {}
+  function renderRoad(){
+    var keys = Object.keys(TRACKS);
+    if (!window.ROADMAP) { $('road').hidden = true; return; }
+    if (!ROADMAP[roadTrack]) roadTrack = keys[0];
+    $('roadTabs').innerHTML = keys.map(function(k){
+      return '<button class="chip" type="button" data-track="' + k + '"' + tcStyle(k) + ' aria-pressed="' + (roadTrack === k) + '">' + esc(TRACKS[k].name) + '</button>';
+    }).join('');
+    var steps = ROADMAP[roadTrack] || [], done = roadDone[roadTrack] || [];
+    $('road').style.setProperty('--tc', TRACKS[roadTrack].c || 'var(--accent)');
+    $('roadSteps').innerHTML = steps.map(function(s, n){
+      var on = done.indexOf(n) >= 0;
+      return '<li><button type="button" data-n="' + n + '" aria-pressed="' + on + '"><span class="rs-n">' + (on ? '&#10003;' : pad(n + 1)) + '</span><span class="rs-t">' + esc(s) + '</span></button></li>';
+    }).join('');
+    var cnt2 = steps.filter(function(s, n){ return done.indexOf(n) >= 0; }).length;
+    $('roadFill').style.width = (steps.length ? Math.round(cnt2 / steps.length * 100) : 0) + '%';
+    var note = $('roadNote');
+    if (!note) { note = document.createElement('p'); note.id = 'roadNote'; note.className = 'road-note'; $('road').appendChild(note); }
+    note.textContent = cnt2 === steps.length && steps.length ? 'Track complete. Time to pitch your first client.' : cnt2 + ' of ' + steps.length + ' steps done';
+  }
+
+  function renderTools(){
+    $('toolList').innerHTML = (window.TOOLS || []).map(function(t){
+      var u = safeUrl(t.url);
+      var col = TRACKS[t.k] && TRACKS[t.k].c ? TRACKS[t.k].c : '';
+      return '<li><a href="' + esc(u) + '" target="_blank" rel="noopener"' + (col ? ' style="--tc:' + col + '"' : '') + '><i aria-hidden="true">' + esc(t.n.charAt(0)) + '</i><span><b>' + esc(t.n) + '</b><small>' + esc(t.t) + '</small></span></a></li>';
+    }).join('');
+    var C = window.CHALLENGE;
+    if (!C) { $('chal').hidden = true; return; }
+    var end = Date.parse(C.due + 'T23:59:59+06:00'), left = isNaN(end) ? null : Math.ceil((end - Date.now()) / 864e5);
+    var g = safeUrl((SITE.contact || {}).group);
+    $('chal').innerHTML = '<span class="chal-tag">Practice challenge</span><h3>' + esc(C.title) + '</h3><p>' + esc(C.text) + '</p>' +
+      (C.tip ? '<p class="chal-tip"><b>Tip:</b> ' + esc(C.tip) + '</p>' : '') +
+      '<div class="chal-foot">' + (left !== null ? '<span class="chal-left">' + (left > 1 ? left + ' days left' : (left === 1 ? 'Last day is tomorrow' : (left === 0 ? 'Due today' : 'Closed'))) + ' · ' + esc(fmtD(C.due)) + '</span>' : '') +
+      (g ? '<a class="btn btn--spark" href="' + esc(g) + '" target="_blank" rel="noopener">Post in class group</a>' : '<a class="btn btn--spark" href="#students">See who is on it</a>') + '</div>';
   }
 
   function renderHire(){
@@ -241,6 +299,22 @@
   }
   function renderFaq(){
     $('faqList').innerHTML = FAQ.map(function(f){ return '<details><summary>' + esc(f.q) + '</summary><p>' + esc(f.a) + '</p></details>'; }).join('');
+    var c = SITE.contact || {}, btns = [];
+    var wa = safeUrl(c.whatsapp, 'wa'), g = safeUrl(c.group);
+    var mail = c.email && /^[^\s@<>"]+@[^\s@<>"]+$/.test(c.email) ? c.email : '';
+    if (wa) btns.push('<a class="btn btn--wa" href="' + wa + '?text=' + encodeURIComponent('Hello B-lab team, I have a question.') + '" target="_blank" rel="noopener">WhatsApp</a>');
+    if (g) btns.push('<a class="btn btn--line" href="' + esc(g) + '" target="_blank" rel="noopener">Class group</a>');
+    if (mail) btns.push('<a class="btn btn--line" href="mailto:' + esc(mail) + '">Email</a>');
+    var t = Date.parse(NEXT_CLASS.at), when = '';
+    if (!isNaN(t)) {
+      var dt = new Date(t + 6 * 3600e3), days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      var hr = dt.getUTCHours(), mn = dt.getUTCMinutes();
+      when = days[dt.getUTCDay()] + ', ' + dt.getUTCDate() + ' ' + SHORT_M[dt.getUTCMonth()] + ' · ' + ((hr % 12) || 12) + ':' + pad(mn) + ' ' + (hr >= 12 ? 'PM' : 'AM');
+    }
+    $('faqSide').innerHTML =
+      '<div class="fs-card fs-card--dark"><h3>Still have a question?</h3><p>' + (btns.length ? 'Ask us directly and a batch lead will reply.' : 'Message your batch lead in the class group and they will help you out.') + '</p>' + (btns.length ? '<div class="fs-btns">' + btns.join('') + '</div>' : '') + '</div>' +
+      (when ? '<div class="fs-card"><span class="fs-next" style="color:var(--accent)">Next class</span><span class="fs-time">' + esc(when) + '</span><p style="margin:0 0 14px">' + esc(NEXT_CLASS.title) + '</p><a class="btn btn--line" style="color:var(--ink);border-color:var(--line)" href="' + esc(calendarLink(t)) + '" target="_blank" rel="noopener">Add to Google Calendar</a></div>' : '') +
+      '<div class="fs-card"><h3>Quick links</h3><div class="fs-links"><a href="#tracker">Class tracker</a><a href="#students">Make an ID card</a><a href="#notices">Notice board</a><a href="#hire">Hire the batch</a></div></div>';
   }
 
 
@@ -300,6 +374,13 @@
   }
 
   /* ---------- success stories ---------- */
+  function clientBlock(s){
+    var name = s.cn || s.client; if (!name) return '';
+    var av;
+    if (s.img) av = '<img src="' + esc(/^(https?:)?\/\//i.test(s.img) ? s.img : 'images/clients/' + s.img) + '" alt="" loading="lazy">';
+    else av = esc(name.replace(/^(a|an|the)\s+/i, '').charAt(0).toUpperCase());
+    return '<span class="st-client-b"><span class="st-av" aria-hidden="true">' + av + '</span><span><b>' + esc(name) + '</b>' + (s.cr ? '<small>' + esc(s.cr) + '</small>' : '') + '</span></span>';
+  }
   function renderStories(){
     var S = window.STORIES || [], c = SITE.contact || {};
     var msg = encodeURIComponent('Hello B-lab team, I would like to share my client story for the website.');
@@ -314,7 +395,7 @@
         '<blockquote>' + esc(s.quote) + '</blockquote>' +
         (s.result ? '<span class="st-res">' + esc(s.result) + '</span>' : '') +
         '<figcaption>' + (p ? '<button type="button" class="st-who" data-id="' + s.s + '"><span class="tk-av">' + face(s.s) + '</span><span><b>' + esc(p.n) + '</b><small>' + esc(p.r) + '</small></span></button>' : '<span></span>') +
-        (s.client ? '<span class="st-client">for ' + esc(s.client) + '</span>' : '') + '</figcaption></figure>';
+        clientBlock(s) + '</figcaption></figure>';
     }).join('');
     var invite = '<div class="story story--invite"><span class="st-mark" aria-hidden="true">&ldquo;</span><h3>' + (S.length ? 'Worked with one of us?' : 'The first stories are on their way') + '</h3>' +
       '<p>' + (S.length ? 'Tell us how it went and your words can appear here.' : 'Our students are finishing their first client projects. When a client says something kind, it will appear on this page.') + '</p>' + cta + '</div>';
@@ -581,7 +662,7 @@
   }
 
   function reveals(){
-    var els = document.querySelectorAll('.sec-head, .tracks, .spot, .notes, .res, .tools, .livegrid, .skillmap, .hire, .faq, .tk-sum, .tk-wrap, .stories');
+    var els = document.querySelectorAll('.sec-head, .tracks, .spot, .notes, .res, .tools, .livegrid, .skillmap, .hire, .faq, .tk-sum, .tk-wrap, .stories, .road, .lib-two, .faq-wrap');
     Array.prototype.forEach.call(els, function(el){ el.classList.add('rv'); });
     if (!('IntersectionObserver' in window)) { Array.prototype.forEach.call(els, function(el){ el.classList.add('in'); }); return; }
     var io = new IntersectionObserver(function(es){
@@ -844,13 +925,29 @@
   /* ---------- first paint ---------- */
   function renderAll(){
     renderWall(); renderMarquee(); renderLive(); renderTracks(); renderSkillMap(); renderSpot();
-    renderChips(); renderGrid(); renderNotices(); renderTracker(); renderStories(); renderResources(); renderFooter(); renderHire(); renderFaq();
+    renderChips(); renderGrid(); renderNotices(); renderTracker(); renderStories(); renderResources(); renderRoad(); renderTools(); renderFooter(); renderHire(); renderFaq();
     var fc = $('fCopy');
     if (fc) fc.addEventListener('click', function(){ copyText($('fMail').textContent, fc, 'Copy'); });
   }
   if (window.BlabSheet) BlabSheet.applyCache();
   renderAll();
   countdown(); counters(); reveals(); progress(); cursor(); tilt();
+  $('libTabs').addEventListener('click', function(e){
+    var b = e.target.closest('button[data-kind]'); if (!b) return;
+    libKind = b.getAttribute('data-kind'); renderResources();
+  });
+  $('roadTabs').addEventListener('click', function(e){
+    var b = e.target.closest('button[data-track]'); if (!b) return;
+    roadTrack = b.getAttribute('data-track'); renderRoad();
+  });
+  $('roadSteps').addEventListener('click', function(e){
+    var b = e.target.closest('button[data-n]'); if (!b) return;
+    var n = parseInt(b.getAttribute('data-n'), 10), list = roadDone[roadTrack] || [], i = list.indexOf(n);
+    if (i >= 0) list.splice(i, 1); else list.push(n);
+    roadDone[roadTrack] = list;
+    try { localStorage.setItem('blab-road', JSON.stringify(roadDone)); } catch (e2) {}
+    renderRoad();
+  });
   $('tkQ').addEventListener('input', renderTracker);
   $('tkLate').addEventListener('change', renderTracker);
   $('tkTable').addEventListener('click', function(e){

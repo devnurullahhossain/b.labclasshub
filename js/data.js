@@ -24,7 +24,7 @@ var SITE = {
 };
 
 /* Next class. The countdown in the hero reads this. Keep the +06:00 so it matches Bangladesh time. */
-var NEXT_CLASS = { title: "Class 14: Flexbox and Grid practice", at: "2026-10-31T10:00:00+06:00", hours: 2 };
+var NEXT_CLASS = { title: "Class 15: next topic", at: "2026-11-03T10:00:00+06:00", hours: 2 };
 
 /* The four things B-lab teaches. tools = skills shown on chips and in the ticker. c = the track's own colour. */
 var TRACKS = {
@@ -67,6 +67,283 @@ var STATUS = { live: ["Live", "live"], wip: ["In progress", "wip"], todo: ["Not 
    w:true = this student has won a first client (shows a star)
    NOTE: names, headlines, projects and bios are placeholders. Skills were assigned at random.
    Photos 01 to 13 are real, so replace the names for those rows first. */
+var PEOPLE = [
+  {
+    f: "01.jpeg",
+    n: "Rafi Ahmed",
+    t: "wp",
+    r: "WordPress builder",
+    s: ["WordPress", "Google Ads"],
+    p: "Recipe blog",
+    st: "live",
+    b: "Sets up a WordPress site from hosting to launch and writes notes for the client.",
+    l: "",
+  },
+  {
+    f: "02.png",
+    n: "Jannatul",
+    t: "gfx",
+    r: "Illustrator artist",
+    s: ["Photoshop", "Adobe Illustrator", "Google Ads"],
+    p: "Business card and letterhead",
+    st: "live",
+    b: "Likes clean layouts, strong type and a small colour palette.",
+    l: "",
+  },
+  {
+    f: "03.jpg",
+    n: "Monir Khan Shanto",
+    t: "mkt",
+    r: "Campaign builder",
+    s: ["Facebook Ads", "Google Ads"],
+    p: "Google Ads search campaign",
+    st: "wip",
+    b: "Writes short ad copy and tests two versions of every ad.",
+    l: "",
+  },
+  {
+    f: "04.jpg",
+    n: "Sumaiya Islam Rodshi",
+    t: "web",
+    r: "Frontend beginner",
+    s: ["HTML", "CSS", "Adobe Illustrator"],
+    p: "Landing page for a cafe",
+    st: "todo",
+    b: "Likes small details like hover effects, grids and clean code.",
+    l: "",
+  },
+  {
+    f: "05.jpg",
+    n: "Mubassir Raiyan",
+    t: "mkt",
+    r: "Ads strategist",
+    s: ["Facebook Ads", "Google Ads", "WordPress"],
+    p: "Lead ad for a tutor",
+    st: "live",
+    b: "Writes short ad copy and tests two versions of every ad.",
+    l: "",
+  },
+  {
+    f: "06.jpeg",
+    n: "Sumiya Bushra Sara",
+    t: "web",
+    r: "Frontend beginner",
+    s: ["HTML", "CSS", "Photoshop"],
+    p: "Responsive menu component",
+    st: "wip",
+    b: "Likes small details like hover effects, grids and clean code.",
+    l: "",
+  },
+  {
+    f: "07.jpg",
+    n: "Bristy",
+    t: "wp",
+    r: "WordPress builder",
+    s: ["WordPress", "CSS"],
+    p: "Recipe blog",
+    st: "live",
+    b: "Learning pages, menus, forms and a simple shop setup.",
+    l: "",
+  },
+  {
+    f: "08.jpg",
+    n: "An Noor Tasnim",
+    t: "gfx",
+    r: "Illustrator artist",
+    s: ["Photoshop", "Adobe Illustrator", "WordPress"],
+    p: "Logo set for 3 small brands",
+    st: "todo",
+    b: "Likes clean layouts, strong type and a small colour palette.",
+    l: "",
+  },
+  {
+    f: "09.jpg",
+    n: "Arnob Hossain Rakib",
+    t: "wp",
+    r: "WordPress builder",
+    s: ["WordPress", "Photoshop"],
+    p: "Coaching centre website",
+    st: "wip",
+    b: "Tweaks themes until they look custom and tests every plugin first.",
+    l: "",
+  },
+  {
+    f: "10.jpg",
+    n: "Veer Abir",
+    t: "wp",
+    r: "Blog builder",
+    s: ["WordPress", "CSS"],
+    p: "Blog on free hosting",
+    st: "wip",
+    b: "Learning pages, menus, forms and a simple shop setup.",
+    l: "",
+  },
+  {
+    f: "11.jpeg",
+    n: "Nurullah Hossain",
+    t: "web",
+    r: "HTML and CSS developer",
+    s: ["HTML", "CSS", "Google Ads"],
+    p: "Landing page for a cafe",
+    st: "wip",
+    b: "Practises one new layout after every class and cares a lot about spacing.",
+    l: "",
+  },
+  {
+    f: "12.jpg",
+    n: "Abu Huraira As Sami",
+    t: "wp",
+    r: "Blog builder",
+    s: ["WordPress", "Facebook Ads"],
+    p: "Handmade soap store",
+    st: "live",
+    b: "Sets up a WordPress site from hosting to launch and writes notes for the client.",
+    l: "",
+  },
+  {
+    f: "13.jpg",
+    n: "Mahim",
+    t: "mkt",
+    r: "Google Ads learner",
+    s: ["Facebook Ads", "Google Ads", "Adobe Illustrator"],
+    p: "Lead ad for a tutor",
+    st: "wip",
+    b: "Writes short ad copy and tests two versions of every ad.",
+    l: "",
+  },
+  {
+    f: "14.jpeg",
+    n: "Al-Imran",
+    t: "gfx",
+    r: "Photoshop designer",
+    s: ["Photoshop", "Adobe Illustrator", "HTML"],
+    p: "Business card and letterhead",
+    st: "todo",
+    b: "Sketches an idea first, then builds it in Photoshop or Illustrator.",
+    l: "",
+  },
+  {
+    f: "15.png",
+    n: "Nafi",
+    t: "wp",
+    r: "WordPress builder",
+    s: ["WordPress", "Facebook Ads"],
+    p: "Local shop website",
+    st: "live",
+    b: "Learning pages, menus, forms and a simple shop setup.",
+    l: "",
+  },
+  {
+    f: "16.png",
+    n: "Imtiaj Ahmmed",
+    t: "web",
+    r: "Layout designer",
+    s: ["HTML", "CSS", "WordPress"],
+    p: "Landing page for a cafe",
+    st: "todo",
+    b: "Likes small details like hover effects, grids and clean code.",
+    l: "",
+  },
+  {
+    f: "17.jpeg",
+    n: "Ashikuzzaman Prottoy",
+    t: "web",
+    r: "HTML and CSS developer",
+    s: ["HTML", "CSS", "Google Ads"],
+    p: "Landing page for a cafe",
+    st: "live",
+    b: "Practises one new layout after every class and cares a lot about spacing.",
+    l: "",
+  },
+  {
+    f: "18.png",
+    n: "Nazia Tabassum",
+    t: "web",
+    r: "Layout designer",
+    s: ["HTML", "CSS"],
+    p: "Flexbox pricing cards",
+    st: "wip",
+    b: "Likes small details like hover effects, grids and clean code.",
+    l: "",
+  },
+  {
+    f: "19.jpeg",
+    n: "Samiya Akter Tisha",
+    t: "mkt",
+    r: "Ads strategist",
+    s: ["Facebook Ads", "Google Ads", "WordPress"],
+    p: "Google Ads search campaign",
+    st: "wip",
+    b: "Learning how to pick an audience and keep cost per click low.",
+    l: "",
+  },
+  {
+    f: "22.png",
+    n: "Monira",
+    t: "mkt",
+    r: "Google Ads learner",
+    s: ["Facebook Ads", "Google Ads", "HTML"],
+    p: "Ad plan for a local bakery",
+    st: "wip",
+    b: "Writes short ad copy and tests two versions of every ad.",
+    l: "",
+  },
+  {
+    f: "25.png",
+    n: "Fahim Reza",
+    t: "mkt",
+    r: "Google Ads learner",
+    s: ["Facebook Ads", "Google Ads", "CSS"],
+    p: "Facebook page growth test",
+    st: "wip",
+    b: "Learning how to pick an audience and keep cost per click low.",
+    l: "",
+  },
+  {
+    f: "25.png",
+    n: "Tuba Noor",
+    t: "mkt",
+    r: "Campaign builder",
+    s: ["Facebook Ads", "Google Ads"],
+    p: "Ad plan for a local bakery",
+    st: "wip",
+    b: "Runs small test campaigns and explains the numbers in plain words.",
+    l: "",
+  },
+  {
+    f: "25.png",
+    n: "Asif Mahmud",
+    t: "gfx",
+    r: "Social post designer",
+    s: ["Photoshop", "Adobe Illustrator", "Google Ads"],
+    p: "YouTube thumbnail pack",
+    st: "todo",
+    b: "Sketches an idea first, then builds it in Photoshop or Illustrator.",
+    l: "",
+  },
+  {
+    f: "25.png",
+    n: "Ishrat Zaman",
+    t: "gfx",
+    r: "Social post designer",
+    s: ["Photoshop", "Adobe Illustrator", "Facebook Ads"],
+    p: "Festival post templates",
+    st: "live",
+    b: "Makes template packs so a page can post all month without redesigning.",
+    l: "",
+  },
+  {
+    f: "25.png",
+    n: "Zahid Sarker",
+    t: "gfx",
+    r: "Social post designer",
+    s: ["Photoshop", "Adobe Illustrator", "Facebook Ads"],
+    p: "Business card and letterhead",
+    st: "todo",
+    b: "Likes clean layouts, strong type and a small colour palette.",
+    l: "",
+  },
+];
 
 var NOTICES = [
   {
@@ -157,6 +434,23 @@ var FAQ = [
     q: "Can I get my own ID card to share?",
     a: "Yes. Open your profile, tap Make ID card, then download the picture or share it straight to Facebook or WhatsApp.",
   },
+  {
+    q: "When are the classes?",
+    a: "Every Saturday and Tuesday, 10:00 AM to 12:00 PM. The next class is shown at the top of the site with a countdown.",
+  },
+  {
+    q: "What do I need to follow the class?",
+    a: "A laptop or PC, a stable internet connection and a free Google account. The tools we use are free to start with.",
+  },
+  {
+    q: "How do I hand in my work?",
+    a: "Post your link in the class group before the deadline on the notice board. A rough draft is fine, we improve it together.",
+  },
+  {
+    q: "Do I need coding for WordPress?",
+    a: "No. WordPress runs on ready themes and plugins. A little HTML and CSS helps when you want to fine tune the design.",
+  },
+  { q: "Can I see how I am doing?", a: "Yes. The Class tracker shows your attendance and which work you have handed in." },
   { q: "What does the blinking dot mean?", a: "It marks a student whose project is live on the internet right now." },
   {
     q: "Can a client hire a student from the batch?",
@@ -168,15 +462,7 @@ var FAQ = [
    Paste the published CSV link of each tab here. Leave '' to keep using the lists in this file.
    Guide: Google Sheets > File > Share > Publish to web > choose the tab > CSV > Publish > copy the link.
    Ready-made column templates are in the sheet-templates folder. */
-var SHEET = {
-  people:
-    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ2TMOjWtd8lIwYLP9JJcV8RLSZYAvm5YuPpWvDv-x_t1s75_z8WpCDrnA1UZijUhLAIn0MLLeNVjmc/pub?gid=2047780549&single=true&output=csv",
-  notices:
-    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ2TMOjWtd8lIwYLP9JJcV8RLSZYAvm5YuPpWvDv-x_t1s75_z8WpCDrnA1UZijUhLAIn0MLLeNVjmc/pub?gid=1333319967&single=true&output=csv",
-  tracker:
-    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ2TMOjWtd8lIwYLP9JJcV8RLSZYAvm5YuPpWvDv-x_t1s75_z8WpCDrnA1UZijUhLAIn0MLLeNVjmc/pub?gid=444625727&single=true&output=csv",
-  stories: "",
-};
+var SHEET = { people: "", notices: "", tracker: "", stories: "" };
 
 /* ---------- Class tracker ----------
    classes = every class held. att for each student is one letter per class: P present, A absent.
@@ -236,30 +522,84 @@ var TRACKER = {
    s = position of the student in PEOPLE (0 is the first row, 1 the second)
    The three stories below are SAMPLE text so you can see the layout. They show a small "Sample story" tag.
    Replace them with what your real clients said, and delete  sample: true  from each one to hide the tag.
+   cn = client name or business, cr = their role, img = client photo in images/clients (optional).
    Only real client feedback should be shown as a story. */
 var STORIES = [
   {
     s: 0,
+    cn: "Amran Hasan",
+    cr: "Owner",
     client: "a local recipe page",
     quote: "He set up the whole site, explained every step in simple words and finished two days early.",
     result: "Site live in 5 days",
     stars: 5,
-    sample: true,
+    img: "amran.png",
   },
   {
     s: 1,
+    cn: "Kamrul Islam",
+    cr: "Founder",
     client: "a small home business",
     quote: "The logo and business card felt like us from the first draft. We only changed one colour.",
     result: "3 designs, 1 round of changes",
     stars: 5,
-    sample: true,
+    img: 'kamrul.png'
   },
   {
     s: 4,
+    cn: "Nisith Roy",
+    cr: "Teacher",
     client: "a home tutor",
     quote: "My Facebook ad brought real messages from parents in the first week, and the numbers were easy to follow.",
     result: "18 enquiries in 7 days",
     stars: 5,
-    sample: true,
+    img: "nitish.png"
   },
 ];
+
+/* ---------- Learning path (Keep learning section) ---------- */
+var ROADMAP = {
+  mkt: ["Learn the ad basics", "Set up an ad account", "Run a small test campaign", "Read the numbers", "Pitch your first client"],
+  gfx: [
+    "Learn shapes, type and colour",
+    "Master Photoshop basics",
+    "Draw clean vectors in Illustrator",
+    "Build a three piece portfolio",
+    "Offer your first design job",
+  ],
+  wp: [
+    "Get hosting and install WordPress",
+    "Pick and tweak a theme",
+    "Add pages, menus and forms",
+    "Run speed and safety checks",
+    "Hand a site to a client",
+  ],
+  web: [
+    "Write the HTML structure",
+    "Style it with CSS",
+    "Build layouts with Flexbox and Grid",
+    "Make it work on phones",
+    "Publish your portfolio page",
+  ],
+};
+
+/* Tools we use. k = track key. */
+var TOOLS = [
+  { n: "Visual Studio Code", t: "Write HTML and CSS", k: "web", url: "https://code.visualstudio.com" },
+  { n: "Figma", t: "Plan layouts before you build", k: "gfx", url: "https://www.figma.com" },
+  { n: "Adobe Photoshop", t: "Photos, mockups and posts", k: "gfx", url: "https://www.adobe.com/products/photoshop.html" },
+  { n: "Adobe Illustrator", t: "Logos and clean vector art", k: "gfx", url: "https://www.adobe.com/products/illustrator.html" },
+  { n: "LocalWP", t: "Run WordPress on your own PC", k: "wp", url: "https://localwp.com" },
+  { n: "Meta Ads Manager", t: "Facebook and Instagram ads", k: "mkt", url: "https://www.facebook.com/adsmanager" },
+  { n: "Google Ads", t: "Search and display campaigns", k: "mkt", url: "https://ads.google.com" },
+  { n: "Canva", t: "Quick social posts and thumbnails", k: "gfx", url: "https://www.canva.com" },
+];
+
+/* Practice challenge. Change it every week. due = last day, k = track key. */
+var CHALLENGE = {
+  title: "Build a one-screen portfolio hero",
+  text: "Use Flexbox to put your name, a job title and one button on a single screen. It must look right on a phone. Post your link in the class group.",
+  due: "2026-11-07",
+  k: "web",
+  tip: "Start with the phone layout first.",
+};
