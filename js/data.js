@@ -278,8 +278,8 @@ var PEOPLE = [
     l: "",
   },
   {
-    f: "22.png",
-    n: "Monira",
+    f: "20.jpg",
+    n: "Taspia Hossen Shanta",
     t: "mkt",
     r: "Google Ads learner",
     s: ["Facebook Ads", "Google Ads", "HTML"],
@@ -289,8 +289,8 @@ var PEOPLE = [
     l: "",
   },
   {
-    f: "25.png",
-    n: "Fahim Reza",
+    f: "22.png",
+    n: "Sumonti Debnath",
     t: "mkt",
     r: "Google Ads learner",
     s: ["Facebook Ads", "Google Ads", "CSS"],
